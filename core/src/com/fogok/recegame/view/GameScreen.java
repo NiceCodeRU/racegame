@@ -25,7 +25,7 @@ public class GameScreen implements Screen {
         carTexture = new Texture(Gdx.files.internal("car.png"));
         roadTexture = new Texture(Gdx.files.internal("road.jpg"));
         road = new Road(roadTexture, 0, 0, 852, 480);
-        car = new Car(carTexture, 0, 0, 146, 288);
+        car = new Car(carTexture, 30, 0, 146, 288);
     }
 
     @Override
