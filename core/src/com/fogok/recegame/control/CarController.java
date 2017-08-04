@@ -17,37 +17,47 @@ public class CarController {
         this.carBounds = carBounds;
     }
 
-    float speed, speedVelocity = 0.1f, speedMax = 3f;
+    private float carSpeed, speedVelocity = 10f, speedMax = 10f;
+    private float rotationSpeed = 30f;
+
     public void handle(){
+        //все, что связанно со скоростью
         if(Gdx.input.isKeyPressed(Input.Keys.UP))
-            speed += speedVelocity;
+            carSpeed += speedVelocity * GameScreen.deltaCff;
         else if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
-            speed -= speedVelocity;
+            carSpeed -= speedVelocity * GameScreen.deltaCff;
         else
             dawnSpeed();
 
-        speed = sliceSpeed();
+        carSpeed = sliceSpeed();
 
 
-        carBounds.setPosition(carBounds.getX() + MathUtils.cosDeg(carBounds.getRotation() + 90)* speed * GameScreen.deltaCff,
-                        carBounds.getY() + MathUtils.sinDeg(carBounds.getRotation() + 90)* speed * GameScreen.deltaCff);
+        //все, что связанно с поворотом
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT))
+            carBounds.rotate(rotationSpeed * carSpeed * GameScreen.deltaCff);
+        else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+            carBounds.rotate(-rotationSpeed * carSpeed * GameScreen.deltaCff);
+
+
+        carBounds.setPosition(carBounds.getX() + MathUtils.cosDeg(carBounds.getRotation() + 90)* carSpeed * GameScreen.deltaCff,
+                        carBounds.getY() + MathUtils.sinDeg(carBounds.getRotation() + 90)* carSpeed * GameScreen.deltaCff);
     }
-    private void dawnSpeed(){
-        if (speed > speedVelocity)
-            speed -= speedVelocity;
-        else if (speed < speedVelocity)
-            speed +=speedVelocity;
+    private void dawnSpeed(){    // гасим скорость
+        if (carSpeed > speedVelocity * GameScreen.deltaCff)
+            carSpeed -= speedVelocity * GameScreen.deltaCff;
+        else if (carSpeed < speedVelocity * GameScreen.deltaCff)
+            carSpeed +=speedVelocity * GameScreen.deltaCff;
         else
-            speed = 0f;
+            carSpeed = 0f;
     }
 
-    private float sliceSpeed(){
-        if(speed > speedMax)
+    private float sliceSpeed(){ // ограничиваем скорость
+        if(carSpeed > speedMax)
             return speedMax;
 
-        if (speed < -speedMax)
+        if (carSpeed < -speedMax)
             return -speedMax;
 
-        return speed;
+        return carSpeed;
     }
 }
